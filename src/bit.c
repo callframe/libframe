@@ -4,6 +4,7 @@
 
 #include "lf/assert.h"
 #include "lf/compat.h"
+#include "lf/macro.h"
 
 i32 lf_ctz(usize v) {
   if (v == 0) return sizeof(usize) * CHAR_BIT;
@@ -11,9 +12,9 @@ i32 lf_ctz(usize v) {
 // GNUC handling
 #if defined(LF_COMPILER_GNUC)
 #if defined(LF_64BIT)
-  return (i32)__builtin_ctzll((unsigned long long)v);
+  return lf_cast(i32, __builtin_ctzll(lf_cast(unsigned long long, v)));
 #elif defined(LF_32BIT)
-  return (i32)__builtin_ctz((unsigned long)v);
+  return lf_cast(i32, __builtin_ctz(lf_cast(unsigned long, v)));
 #else
 #error "not supported"
 #endif
@@ -30,9 +31,9 @@ i32 lf_clz(usize v) {
 // GNUC handling
 #if defined(LF_COMPILER_GNUC)
 #if defined(LF_64BIT)
-  return (i32)__builtin_clzll((unsigned long long)v);
+  return lf_cast(i32, __builtin_clzll(lf_cast(unsigned long long, v)));
 #elif defined(LF_32BIT)
-  return (i32)__builtin_clz((unsigned long)v);
+  return lf_cast(i32, __builtin_clz(lf_cast(unsigned long, v)));
 #else
 #error "not supported"
 #endif
@@ -62,10 +63,10 @@ usize lf_align_down(usize v, usize align) {
 
 usize lf_log2ceil(usize v) {
   lf_assert(v != 0);
-  return sizeof(usize) * CHAR_BIT - (usize)lf_clz(v - 1);
+  return sizeof(usize) * CHAR_BIT - lf_cast(usize, lf_clz(v - 1));
 }
 
 usize lf_log2floor(usize v) {
   lf_assert(v != 0);
-  return (sizeof(usize) * CHAR_BIT - 1) - (usize)lf_clz(v);
+  return (sizeof(usize) * CHAR_BIT - 1) - lf_cast(usize, lf_clz(v));
 }

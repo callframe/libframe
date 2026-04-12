@@ -5,4 +5,6 @@
 #define lf_enum(T, name) \
   typedef T name;        \
   enum
-#define lf_zerout(x, n) memset((x), 0, (n) * sizeof(x))
+// TODO: reject pointer arguments at compile time.
+#define lf_countof(x) (sizeof(x) / sizeof((x)[0]))
+#define lf_zerout(x, n) memset(&(x), 0, (n) * sizeof(x))

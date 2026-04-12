@@ -5,6 +5,8 @@
 
 #include "lf/allocator.h"
 #include "lf/assert.h"
+#include "lf/bit.h"
+#include "lf/macro.h"
 
 static inline usize lf_array_next_cap(usize curr_cap, usize min_size) {
   curr_cap = curr_cap == 0 ? LF_ARRAY_INITIAL_CAPACITY : curr_cap;
@@ -12,18 +14,37 @@ static inline usize lf_array_next_cap(usize curr_cap, usize min_size) {
   return curr_cap;
 }
 
-void lf_array_deinit(struct lf_array* array) { lf_deallocate(array->elems); }
+void lf_array_init_with(struct lf_array* array, usize elem_size,
+                        usize initial_cap) {
+  lf_zerout(*array, 1);
+
+  usize new_cap = lf_array_next_cap(0, initial_cap);
+  usize size = lf_align_up(new_cap * elem_size, _Alignof(max_align_t));
+
+  u8* new_elems = lf_allocate(size, _Alignof(max_align_t));
+  lf_zerout(*new_elems, size);
+
+  array->elems = new_elems;
+  array->elems_cap = new_cap;
+  array->elem_size = elem_size;
+}
+
+void lf_array_deinit(struct lf_array* array) {
+  lf_deallocate(array->elems);
+  lf_zerout(*array, 1);
+}
 
 void lf_array_resize(struct lf_array* array, usize new_cap) {
   lf_assert(new_cap >= array->elems_len);
 
-  usize size = lf_align_up(new_cap * array->elem_size, _Alignof(max_align_t));
-  u8* new_elems = lf_allocate(size, _Alignof(max_align_t));
-  memcpy(new_elems, array->elems, array->elem_size * array->elems_len);
+  struct lf_array temp = {0};
+  lf_array_init_with(&temp, array->elem_size, new_cap);
+
+  memcpy(temp.elems, array->elems, array->elem_size * array->elems_len);
+  temp.elems_len = array->elems_len;
   lf_deallocate(array->elems);
 
-  array->elems = new_elems;
-  array->elems_cap = new_cap;
+  *array = temp;
 }
 
 void lf_array_reserve(struct lf_array* array, usize min_len) {
