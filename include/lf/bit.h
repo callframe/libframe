@@ -40,6 +40,10 @@ typedef double f64;
 // bit control
 bool lf_ispow2(usize v);
 
+bool lf_aligned_to(usize v, usize align);
+usize lf_align_up(usize v, usize align);
+usize lf_align_down(usize v, usize align);
+
 i32 lf_ctz(usize v);
 i32 lf_clz(usize v);
 

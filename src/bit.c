@@ -47,6 +47,21 @@ bool lf_ispow2(usize v){
   return v && ((v & (v - 1)) == 0);
 }
 
+bool lf_aligned_to(usize v, usize align){
+  lf_assert(lf_ispow2(align));
+  return (v & (align - 1)) == 0;
+}
+
+usize lf_align_up(usize v, usize align) {
+  lf_assert(lf_ispow2(align));
+  return (v + align - 1) & ~(align - 1);
+}
+
+usize lf_align_down(usize v, usize align){
+  lf_assert(lf_ispow2(align));
+  return v & ~(align - 1);
+}
+
 usize lf_log2ceil(usize v) {
   lf_assert(v != 0);
   return sizeof(usize) * CHAR_BIT - (usize)lf_clz(v - 1);
