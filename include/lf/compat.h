@@ -27,11 +27,9 @@
 #if defined(LF_COMPILER_GNUC)
 #define lf_likely(x) __builtin_expect(!!(x), 1)
 #define lf_unlikely(x) __builtin_expect(!!(x), 0)
-#define lf_noreturn __attribute__((noreturn))
 
 #elif defined(LF_COMPILER_MSVC)
 #define lf_likely(x) (x)
 #define lf_unlikely(x) (x)
-#define lf_noreturn __declspec(noreturn)
 
 #endif

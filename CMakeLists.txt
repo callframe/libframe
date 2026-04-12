@@ -17,6 +17,7 @@ set(lf_srcdir "${lf_topdir}/src")
 set(lf_sources
   "${lf_srcdir}/bit.c"
   "${lf_srcdir}/assert.c"
+  "${lf_srcdir}/allocator.c"
 )
 
 add_library(${lf} STATIC ${lf_sources})
@@ -30,8 +31,7 @@ target_compile_definitions(${lf}
 )
 
 set_target_properties(${lf} PROPERTIES
-  C_STANDARD 99
+  C_STANDARD 11
   C_STANDARD_REQUIRED ON
   C_EXTENSIONS OFF
-  POSITION_INDEPENDENT_CODE ON
 )

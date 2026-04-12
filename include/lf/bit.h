@@ -1,8 +1,9 @@
 #pragma once
 
-#include "lf/compat.h"
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
+
+#include "lf/compat.h"
 
 LF_COMPAT_BEGIN
 

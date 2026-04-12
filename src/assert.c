@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-lf_noreturn void LF_PANIC_SYM(const char *file, u32 line, const char *fmt,
+_Noreturn void LF_PANIC_SYM(const char *file, u32 line, const char *fmt,
                               ...) {
   fprintf(stderr, "PANIC at %s:%d: ", file, line);
 
