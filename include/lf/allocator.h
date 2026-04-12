@@ -14,7 +14,10 @@ struct lf_allocator {
   lf_deallocate_t deallocate;
 };
 
-void lf_allocator_use(struct lf_allocator* allocator);
+_Thread_local extern const struct lf_allocator* LF_ALLOCATOR;
+
+const struct lf_allocator* lf_allocator_default(void);
+
 u8* lf_allocate(usize size, usize align);
 void lf_deallocate(u8* p);
 
