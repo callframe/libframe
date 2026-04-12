@@ -25,4 +25,3 @@ void lf_array_push(struct lf_array* array, const u8* elems, usize elems_len);
 void lf_array_pop(struct lf_array* array, u8* out_elem);
 
 u8* lf_array_at(const struct lf_array* array, usize index);
-
