@@ -2,6 +2,7 @@
 
 #include "lf/compat.h"
 #include <stdint.h>
+#include <stdbool.h>
 
 LF_COMPAT_BEGIN
 
@@ -36,6 +37,8 @@ typedef float f32;
 typedef double f64;
 
 // bit control
+bool lf_ispow2(usize v);
+
 i32 lf_ctz(usize v);
 i32 lf_clz(usize v);
 

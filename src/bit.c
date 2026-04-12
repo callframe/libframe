@@ -43,6 +43,10 @@ i32 lf_clz(usize v) {
 #endif
 }
 
+bool lf_ispow2(usize v){
+  return v && ((v & (v - 1)) == 0);
+}
+
 usize lf_log2ceil(usize v) {
   lf_assert(v != 0);
   return sizeof(usize) * CHAR_BIT - (usize)lf_clz(v - 1);
