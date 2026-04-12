@@ -10,7 +10,6 @@ _Noreturn void LF_PANIC_SYM(const char* file, u32 line, const char* fmt, ...);
 #define lf_panic(...) LF_PANIC_SYM(__FILE__, __LINE__, __VA_ARGS__)
 
 #ifdef NDEBUG
-#include "lf/macro.h"
 #define lf_assert(cond) lf_unused(cond)
 
 #else
