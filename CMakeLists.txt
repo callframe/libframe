@@ -7,6 +7,8 @@ project(lib${lf}
   LANGUAGES C
 )
 
+include(CTest)
+
 option(LF_PANIC "whether panic should be defined" ON)
 set(LF_PANIC_SYM "panic_impl" CACHE STRING "name of the panic method")
 
@@ -35,3 +37,7 @@ set_target_properties(${lf} PROPERTIES
   C_STANDARD_REQUIRED ON
   C_EXTENSIONS OFF
 )
+
+if(BUILD_TESTING)
+  add_subdirectory(tests)
+endif()
