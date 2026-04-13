@@ -17,7 +17,6 @@ set(lf_srcdir "${lf_topdir}/src")
 set(lf_sources
   "${lf_srcdir}/bit.c"
   "${lf_srcdir}/assert.c"
-  "${lf_srcdir}/allocator.c"
   "${lf_srcdir}/array.c"
 )
 

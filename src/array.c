@@ -1,9 +1,9 @@
 #include "lf/array.h"
 
 #include <stddef.h>
+#include <stdlib.h>
 #include <string.h>
 
-#include "lf/allocator.h"
 #include "lf/assert.h"
 #include "lf/bit.h"
 #include "lf/macro.h"
@@ -14,61 +14,67 @@ static inline usize lf_array_next_cap(usize curr_cap, usize min_size) {
   return curr_cap;
 }
 
-void lf_array_init_with(struct lf_array* array, usize elem_size,
+bool lf_array_init_with(struct lf_array* array, usize elem_size,
                         usize initial_cap) {
   lf_zerout(*array, 1);
 
   usize new_cap = lf_array_next_cap(0, initial_cap);
   usize size = lf_align_up(new_cap * elem_size, _Alignof(max_align_t));
 
-  u8* new_elems = lf_allocate(size, _Alignof(max_align_t));
+  u8* new_elems = malloc(size);
+  if (new_elems == NULL) return false;
   lf_zerout(*new_elems, size);
 
   array->elems = new_elems;
   array->elems_cap = new_cap;
   array->elem_size = elem_size;
+  return true;
 }
 
 void lf_array_deinit(struct lf_array* array) {
-  lf_deallocate(array->elems);
+  free(array->elems);
   lf_zerout(*array, 1);
 }
 
-void lf_array_resize(struct lf_array* array, usize new_cap) {
+bool lf_array_resize(struct lf_array* array, usize new_cap) {
   lf_assert(new_cap >= array->elems_len);
 
   struct lf_array temp = {0};
-  lf_array_init_with(&temp, array->elem_size, new_cap);
+  if (!lf_array_init_with(&temp, array->elem_size, new_cap)) return false;
 
   memcpy(temp.elems, array->elems, array->elem_size * array->elems_len);
   temp.elems_len = array->elems_len;
-  lf_deallocate(array->elems);
+  free(array->elems);
 
   *array = temp;
+  return true;
 }
 
-void lf_array_reserve(struct lf_array* array, usize min_len) {
-  if (array->elems_cap >= min_len) return;
+bool lf_array_reserve(struct lf_array* array, usize min_len) {
+  if (array->elems_cap >= min_len) return true;
 
   usize new_cap = lf_array_next_cap(array->elems_len, min_len);
-  lf_array_resize(array, new_cap);
+  return lf_array_resize(array, new_cap);
 }
 
-void lf_array_push(struct lf_array* array, const u8* elems, usize elems_len) {
-  lf_assert(elems != NULL);
+bool lf_array_push(struct lf_array* array, const u8* elems, usize elems_len) {
+  lf_assert(elems != NULL || elems_len == 0);
 
-  lf_array_reserve(array, array->elems_len + elems_len);
+  if (!lf_array_reserve(array, array->elems_len + elems_len)) return false;
   u8* at = lf_array_at(array, array->elems_len);
   memcpy(at, elems, array->elem_size * elems_len);
   array->elems_len += elems_len;
+  return true;
 }
 
-void lf_array_pop(struct lf_array* array, u8* out_elem) {
-  lf_assert(array->elems_len > 0);
+bool lf_array_pop(struct lf_array* array, u8* out_elem) {
+  lf_assert(out_elem != NULL);
+  if (array->elems_len == 0) return false;
 
   u8* at = lf_array_at(array, array->elems_len - 1);
   memcpy(out_elem, at, array->elem_size);
   array->elems_len -= 1;
+  return true;
 }
 
 u8* lf_array_at(const struct lf_array* array, usize index) {

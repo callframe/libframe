@@ -17,15 +17,15 @@ struct lf_array {
 
 // Raw Api
 
-void lf_array_init_with(struct lf_array* array, usize elem_size,
+bool lf_array_init_with(struct lf_array* array, usize elem_size,
                         usize initial_cap);
 void lf_array_deinit(struct lf_array* array);
 
-void lf_array_resize(struct lf_array* array, usize new_cap);
-void lf_array_reserve(struct lf_array* array, usize min_len);
+bool lf_array_resize(struct lf_array* array, usize new_cap);
+bool lf_array_reserve(struct lf_array* array, usize min_len);
 
-void lf_array_push(struct lf_array* array, const u8* elems, usize elems_len);
-void lf_array_pop(struct lf_array* array, u8* out_elem);
+bool lf_array_push(struct lf_array* array, const u8* elems, usize elems_len);
+bool lf_array_pop(struct lf_array* array, u8* out_elem);
 
 u8* lf_array_at(const struct lf_array* array, usize index);
 
