@@ -7,6 +7,10 @@ project(lib${lf}
   LANGUAGES C
 )
 
+if(MSVC)
+  message(FATAL_ERROR "MSVC is not supported. Use GCC or Clang.")
+endif()
+
 include(CTest)
 
 option(LF_PANIC "whether panic should be defined" ON)
@@ -35,7 +39,7 @@ target_compile_definitions(${lf}
 set_target_properties(${lf} PROPERTIES
   C_STANDARD 11
   C_STANDARD_REQUIRED ON
-  C_EXTENSIONS OFF
+  C_EXTENSIONS ON
 )
 
 if(BUILD_TESTING)

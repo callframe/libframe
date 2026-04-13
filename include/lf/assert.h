@@ -1,7 +1,7 @@
 #pragma once
 
 #include "lf/bit.h"
-#include "lf/compat.h"
+#include "lf/macro.h"
 
 LF_COMPAT_BEGIN
 
